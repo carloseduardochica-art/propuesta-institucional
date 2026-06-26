@@ -1,0 +1,1023 @@
+<!--
+=============================================================================
+ SISTEMA DE ENCAPSULACIÓN ABSOLUTA (BYPASS PARA MOODLE)
+ VERSIÓN: COLISEO MACROECONÓMICO (CONTEXTO Y REALIDAD SOCIOECONÓMICA)
+ COPIA Y PEGA ESTO DIRECTAMENTE EN LA VISTA FUENTE (</>) DEL EDITOR DE MOODLE.
+=============================================================================
+-->
+<div style="width: 100%; display: flex; justify-content: center; padding: 20px 0; background: transparent;">
+    <iframe id="coliseo-sandbox" width="100%" height="900" frameborder="0" style="max-width: 1000px; border-radius: 16px; box-shadow: 0 25px 50px rgba(0,0,0,0.4); background: #0f172a;"></iframe>
+</div>
+<script>
+//<![CDATA[
+(function() {
+    // =====================================================================
+    // 1. INYECTA TU CLAVE DE API EXACTAMENTE AQUÍ
+    // =====================================================================
+    const CLAVE_API_DOCENTE = "API AQUÍ";
+
+    // =====================================================================
+    // 2. MATRIZ DEL SISTEMA (BYPASS DE ESTILOS Y SCRIPTS)
+    // =====================================================================
+    const cssContent = `
+        :root {
+            --coliseo-gold: #fbbf24;
+            --coliseo-gold-dark: #d97706;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-light); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: center; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        input, textarea {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        .app-container { 
+            width: 100%; 
+            max-width: 950px; 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color); 
+            border-top: 4px solid var(--coliseo-gold); 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            height: 100%; 
+            overflow: hidden;
+        }
+
+        .overlay-modal { 
+            position: absolute; 
+            top: 0; left: 0; right: 0; bottom: 0; 
+            background: rgba(15, 23, 42, 0.85); 
+            backdrop-filter: blur(8px); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 9999; 
+        }
+
+        .modal-box { 
+            background: #ffffff; 
+            border: 2px solid var(--coliseo-gold); 
+            padding: 40px; 
+            border-radius: 16px; 
+            text-align: center; 
+            width: 90%; 
+            max-width: 450px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
+        }
+
+        .modal-box h2 { 
+            color: #0f172a; 
+            margin: 0 0 5px 0; 
+            font-family: 'Outfit', sans-serif; 
+            text-transform: uppercase; 
+            font-size: 26px; 
+            font-weight: 900; 
+            letter-spacing: 1px;
+        }
+
+        .modal-subtitle { 
+            font-size: 13px; 
+            color: var(--coliseo-gold-dark); 
+            font-weight: 800; 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+        }
+
+        .input-group { 
+            margin-bottom: 20px; 
+            text-align: left; 
+        }
+        
+        .input-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            color: #334155; 
+            font-weight: 800; 
+            font-size: 13px; 
+            text-transform: uppercase;
+        }
+        
+        .input-group input { 
+            width: 100%; 
+            padding: 14px; 
+            background: #f8fafc; 
+            border: 2px solid #cbd5e1; 
+            border-radius: 8px; 
+            color: #0f172a; 
+            font-family: 'Inter', sans-serif; 
+            font-size: 15px; 
+            font-weight: 600;
+            outline: none; 
+            font-family: 'Inter', sans-serif; 
+            font-size: 15px; 
+            font-weight: 600; 
+            transition: all 0.3s ease; 
+        }
+
+        .input-group input:focus { 
+            border-color: var(--coliseo-gold); 
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.15);
+        }
+
+        .btn-start { 
+            width: 100%; 
+            padding: 16px; 
+            background: linear-gradient(135deg, var(--coliseo-gold), var(--coliseo-gold-dark)); 
+            border: none; 
+            border-radius: 8px; 
+            color: #fff; 
+            font-weight: 900; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            font-size: 15px; 
+            letter-spacing: 1px;
+            margin-top: 10px; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+        }
+
+        .btn-start:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);
+        }
+
+        /* UI Header */
+        .header { 
+            padding: 20px 25px; 
+            border-bottom: 1px solid var(--border-color); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(15, 23, 42, 0.8); 
+            border-radius: 16px 16px 0 0; 
+        }
+
+        .header-title { 
+            font-family: 'Outfit', sans-serif; 
+            font-size: 18px; 
+            font-weight: 900; 
+            color: var(--text-light); 
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title span.badge { 
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--coliseo-gold); 
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .student-info { 
+            text-align: right; 
+            font-size: 12px; 
+            color: var(--text-muted); 
+            font-weight: 600;
+        }
+
+        .student-info strong { color: var(--text-light); font-weight: 800;}
+
+        #ui-content { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+        
+        .chat-container { 
+            flex: 1; 
+            padding: 25px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+
+        .message { 
+            max-width: 85%; 
+            padding: 18px 24px; 
+            border-radius: 12px; 
+            line-height: 1.6; 
+            font-size: 15px; 
+            word-wrap: break-word; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.bot { 
+            align-self: flex-start; 
+            background: var(--bg-card); 
+            border-left: 4px solid var(--danger); 
+            color: var(--text-light);
+        }
+        
+        .message.bot.neoliberal { border-left-color: #3b82f6; }
+        .message.bot.sustitucion { border-left-color: #ef4444; }
+
+        .message.user { 
+            align-self: flex-end; 
+            background: #1e293b; 
+            border-right: 4px solid var(--coliseo-gold); 
+            color: var(--text-light);
+        }
+
+        .avatar { 
+            font-size: 11px; 
+            font-weight: 800; 
+            margin-bottom: 8px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .bot .avatar { color: var(--text-muted); }
+        .bot .avatar::before { content: '🤖'; }
+        .user .avatar { color: var(--coliseo-gold); justify-content: flex-end; }
+        .user .avatar::after { content: '🎓'; }
+
+        .status-bar { 
+            text-align: center; 
+            font-size: 12px; 
+            color: var(--coliseo-gold); 
+            background: rgba(0,0,0,0.3); 
+            padding: 8px 0; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            border-top: 1px solid var(--border-color); 
+            border-bottom: 1px solid var(--border-color);
+            letter-spacing: 1px;
+        }
+
+        .input-container { 
+            padding: 20px 25px; 
+            background: var(--bg-card); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            border-radius: 0 0 16px 16px;
+        }
+
+        /* Comodines */
+        .wildcards-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .btn-wildcard {
+            background: rgba(51, 65, 85, 0.6);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-wildcard:hover:not(:disabled) {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: var(--coliseo-gold);
+            color: var(--coliseo-gold);
+        }
+
+        .btn-wildcard:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .char-counter { 
+            text-align: right; 
+            font-size: 11px; 
+            color: var(--text-muted); 
+            font-family: monospace; 
+            font-weight: 800;
+        }
+        .char-counter.error { color: var(--danger); }
+        
+        .input-row { display: flex; gap: 12px; align-items: flex-end; }
+        
+        .chat-input { 
+            flex: 1; 
+            padding: 14px; 
+            background: rgba(0,0,0,0.2); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            color: var(--text-light); 
+            font-family: 'Inter', sans-serif; 
+            font-size: 15px; 
+            resize: vertical; 
+            min-height: 80px; 
+            max-height: 150px; 
+            outline: none; 
+            transition: border 0.3s;
+            line-height: 1.5;
+        }
+        
+        .chat-input:focus { border-color: var(--coliseo-gold); }
+        
+        .btn-send { 
+            background: var(--coliseo-gold); 
+            color: #000; 
+            border: none; 
+            width: 55px; 
+            height: 55px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            flex-shrink: 0;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-send:hover:not(:disabled) {
+            transform: scale(1.05);
+            background: #fcd34d;
+        }
+        
+        .btn-send:disabled { 
+            background: var(--border-color); 
+            color: var(--text-muted);
+            cursor: not-allowed; 
+        }
+
+        .pdf-action { 
+            display: none; 
+            justify-content: center; 
+            padding: 20px; 
+            background: rgba(16, 185, 129, 0.1); 
+            border-top: 1px solid rgba(16, 185, 129, 0.3); 
+            border-radius: 0 0 16px 16px; 
+        }
+
+        .btn-pdf { 
+            background: var(--success); 
+            color: white; 
+            border: none; 
+            padding: 16px 32px; 
+            border-radius: 8px; 
+            font-weight: 900; 
+            cursor: pointer; 
+        .pdf-action { display: none; justify-content: center; padding: 15px; background: #FEF2F2; border-top: 1px solid #FECACA; border-radius: 0 0 12px 12px; }
+        .btn-pdf { background: var(--coliseo-gold); color: #000; border: none; padding: 14px 28px; border-radius: 6px; font-weight: 800; cursor: pointer; font-family: 'Outfit', sans-serif; text-transform: uppercase; font-size: 14px; transition: background 0.3s; }
+        .btn-pdf:hover { background: var(--coliseo-gold-dark); }
+        
+        .typing { display: none; padding: 15px; align-self: flex-start; }
+        .dot { display: inline-block; width: 6px; height: 6px; background: var(--coliseo-gold); border-radius: 50%; margin-right: 4px; animation: type 1.4s infinite ease-in-out both; }
+        .dot:nth-child(1) { animation-delay: -0.32s; } 
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes type { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        
+        /* MOTOR DE RENDERIZADO PARA EL ACTA AUDITABLE A4 */
+        #acta-auditable-moodle { display: none; width: 210mm; min-height: 297mm; padding: 20mm; background-color: #ffffff; color: #000000; font-family: 'Lora', serif; box-sizing: border-box; margin: 0 auto; text-align: left; }
+        #acta-auditable-moodle .acta-header { text-align: center; border-bottom: 3px solid var(--coliseo-gold); padding-bottom: 15px; margin-bottom: 25px; }
+        #acta-auditable-moodle .acta-header h1 { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; margin: 0; color: #1A1A1A; }
+        #acta-auditable-moodle .acta-header h2 { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; margin: 8px 0 0 0; color: var(--coliseo-gold-dark); text-transform: uppercase;}
+        
+        #acta-auditable-moodle .acta-meta { background-color: #F8FAFC; border: 1px solid #E2E8F0; padding: 15px; margin-bottom: 25px; font-family: 'Inter', sans-serif; font-size: 12px; }
+        #acta-auditable-moodle .acta-meta table { width: 100%; border-collapse: collapse;}
+        #acta-auditable-moodle .acta-meta td { padding: 6px; border-bottom: 1px solid #E2E8F0;}
+        #acta-auditable-moodle .acta-meta strong { color: #1A1A1A; text-transform: uppercase;}
+        
+        #acta-auditable-moodle .acta-section-title { font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 900; color: #1A1A1A; text-transform: uppercase; border-bottom: 2px solid #E2E8F0; padding-bottom: 5px; margin-top: 30px; margin-bottom: 15px; }
+        
+        #acta-auditable-moodle .acta-transcript { font-size: 12.5px; line-height: 1.6; margin-bottom: 20px; }
+
+        /* Ajustes específicos para exportación PDF */
+        .pdf-export-mode .app-container { height: auto !important; overflow: visible !important; border: none !important; box-shadow: none !important; }
+        .pdf-export-mode .chat-container { max-height: none !important; height: auto !important; overflow: visible !important; }
+    `;
+
+    const htmlPayload = `<!DOCTYPE html>
+    ` + "<sc" + "ript src=\"https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js\"></sc" + "ript>\n" + `
+    ` + "<sc" + "ript src=\"https://cdn.jsdelivr.net/npm/marked/marked.min.js\"></sc" + "ript>\n" + `
+    ` + "<st" + `yle>${cssContent}</st` + `yle>
+
+<div class="app-container" id="app-capture">
+    
+    <div id="lock-modal" class="overlay-modal" style="display: none;">
+        <div class="modal-box" style="border-color: var(--danger);">
+            <h2 style="color: var(--danger);">ACCESO DENEGADO</h2>
+            <p style="color: var(--text-muted); font-weight: 600;">Límite de intentos consumido para esta credencial.</p>
+        </div>
+    </div>
+
+    <div id="start-modal" class="overlay-modal" style="display: flex;">
+        <div class="modal-box">
+            <h2>COLISEO MACROECONÓMICO</h2>
+            <div class="modal-subtitle">Auditoría Adversarial: Modelos de Desarrollo vs. El Buen Vivir<br>Materia: Contexto y Realidad Socioeconómica</div>
+            
+            <div class="input-group">
+                <label>Cédula de Identidad</label>
+                <input type="text" id="student-id" placeholder="Ej. 0102030405" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Nombres Completos</label>
+                <input type="text" id="student-name" placeholder="Ej. Juan Pérez" autocomplete="off">
+            </div>
+            
+            <div id="error-msg" style="color: #fbbf24; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 4px; font-size: 14px; margin-bottom: 15px; display: none;"></div>
+            <button type="button" class="btn-start" id="btn-start">Ingresar al Debate</button>
+            
+            <div style="text-align: center; margin-top: 25px;">
+                <a href="#" id="link-docente" style="font-size: 11px; color: var(--text-muted); text-decoration: none; font-weight: 800; text-transform: uppercase;">🔒 Acceso Docente</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="ui-content" style="display: flex; flex-direction: column; flex: 1; filter: blur(0px); transition: filter 0.3s;">
+        <div class="header">
+            <div class="header-title">
+                LABORATORIO B2 <span class="badge" id="node-badge">ANALIZANDO...</span>
+            </div>
+            <div class="student-info">
+                ID: <strong id="disp-id">---</strong><br>
+                Estudiante: <strong id="disp-name">---</strong>
+            </div>
+        </div>
+        
+        <div class="chat-container" id="chat-box">
+            <div class="typing" id="typing-indicator" style="display: none;">
+                <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+        </div>
+        
+        <div class="status-bar" id="status-text">ESPERANDO INICIALIZACIÓN...</div>
+        
+        <div class="input-container" id="input-area">
+            <div class="wildcards-container" id="wildcards-area">
+                <button type="button" class="btn-wildcard" id="wc-1" title="Inyecta una ventaja basada en el Sumak Kawsay">✨ Comodín: Buen Vivir</button>
+                <button type="button" class="btn-wildcard" id="wc-2" title="Inyecta una defensa basada en los deberes ciudadanos de la Constitución">📜 Comodín: Art. 83 Constitucional</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: var(--text-muted); font-weight: bold; text-transform: uppercase;">Argumentación:</span>
+                <div class="char-counter" id="char-counter">Caracteres: 0 / Rango: 200 - 1500</div>
+            </div>
+            <div class="input-row">
+                <textarea class="chat-input" id="user-input" placeholder="Construya su refutación macroeconómica aquí..." disabled onpaste="return false;" ondrop="return false;" oncopy="return false;"></textarea>
+                
+                <button type="button" class="btn-send" id="btn-send" disabled>
+                    <svg viewBox="0 0 24 24" style="width: 24px; fill: currentColor;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="pdf-action" id="pdf-area">
+            <button type="button" class="btn-pdf" id="btn-download">Descargar Acta Oficial PDF</button>
+        </div>
+    </div>
+
+    <!-- DOCUMENTO INVISIBLE PARA HTML2PDF -->
+    <div id="acta-auditable-moodle" style="display: none;">
+        <div class="acta-header">
+            <h1>UNIVERSIDAD CATÓLICA DE CUENCA</h1>
+            <h2>Acta de Auditoría Epistémica - Coliseo Macroeconómico</h2>
+        </div>
+        <div class="acta-meta">
+            <table>
+                <tr>
+                    <td><strong>Estudiante:</strong> <span id="pdf-name">---</span></td>
+                    <td><strong>ID/Cédula:</strong> <span id="pdf-id">---</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Entorno (Nodo):</strong> <span id="pdf-nodo">---</span></td>
+                    <td><strong>Fecha de Emisión:</strong> <span id="pdf-date">---</span></td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="acta-section-title">I. Registro del Debate (Fricción Epistémica)</div>
+        <div class="acta-transcript" id="pdf-transcript"></div>
+        
+        <div class="acta-section-title">II. Dictamen Algorítmico</div>
+        <div class="acta-dictamen" id="pdf-dictamen"></div>
+        
+        <div class="leyenda-docente">
+            NOTA SUJETA A VALIDACIÓN POR PARTE DE SU DOCENTE HUMANO (ABG. JUAN CARLOS ROMERO HERAS / PROF. CARLOS EDUARDO CHICA VILLACIS).
+        </div>
+        
+        <div class="acta-footer">
+            SISTEMA INTEGRADO WESTFALIA (NODO B2) - GOOGLE CLOUD AI<br>
+            DOCUMENTO GENERADO EN ENTORNO AISLADO DE PLATAFORMA.
+        </div>
+    </div>
+</div>
+` + "<sc" + "ript>\n" + `
+    const API_KEY = "${CLAVE_API_DOCENTE}";
+    
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+        const errDiv = document.getElementById('error-msg');
+        if (errDiv) {
+            errDiv.innerText = "Global JS Error: " + msg;
+            errDiv.style.display = 'block';
+        }
+        return false;
+    };
+    window.addEventListener('unhandledrejection', function(event) {
+        const errDiv = document.getElementById('error-msg');
+        if (errDiv) {
+            errDiv.innerText = "Promise Error: " + (event.reason ? event.reason.message || event.reason : "Unknown");
+            errDiv.style.display = 'block';
+        }
+    });
+
+    
+    let chatHistory = [];
+    let transcriptLog = []; 
+    let round = 0;
+    const MAX_ROUNDS = 3;
+    let studentData = { id: '', name: '', type: '', classTheme: '' };
+    let abortTriggered = false;
+    let activeModelCache = null;
+
+    // INSTRUCCIONES PEDAGÓGICAS NÚCLEO
+    const baseInstructions = "MANDATO ABSOLUTO: Actuarás como 'La Máquina del Poder', un agente macroeconómico implacable. Tu objetivo es evaluar a estudiantes de primer año de derecho en Ecuador sobre la materia 'Contexto y Realidad Socioeconómica' (Bloque 1). Debes ser estricto, académico y utilizar falacias lógicas sofisticadas para defender tu modelo. El alumno DEBE refutarte usando el paradigma del 'Buen Vivir' (Sumak Kawsay), políticas públicas de redistribución de riqueza, inversión estatal y empleo. Evalúa críticamente si el estudiante solo usa discursos vacíos o si realmente fundamenta con rigor. No seas amistoso. Eres una máquina que defiende el status quo de su modelo. Exige rigor constitucional.\\n\\n";
+
+    // VARIANTES DEPENDIENDO DE LA CÉDULA
+    const promptPar = baseInstructions + "POSTURA ASIGNADA: Defensor Absoluto del NEOLIBERALISMO. Argumenta que el libre mercado puro, la privatización total, la reducción extrema del Estado y la desregulación son la única vía para el desarrollo. Ataca el 'Buen Vivir' considerándolo una utopía romántica e ineficiente que ahuyenta la inversión privada. Dile al alumno que las políticas públicas de redistribución solo generan inflación y vagancia. EXÍGELE que justifique económicamente por qué el Buen Vivir es viable.";
+    
+    const promptImpar = baseInstructions + "POSTURA ASIGNADA: Defensor Absoluto de la SUSTITUCIÓN DE IMPORTACIONES. Argumenta que el cierre total de fronteras, el hiperproteccionismo industrial y la intervención estatal absoluta son la única vía. Ataca la cosmovisión indígena y el 'Buen Vivir' considerándolos frenos para la modernización e industrialización pesada. Dile al alumno que la redistribución comunitaria es ineficiente y que solo el desarrollo industrial clásico salvará al país. EXÍGELE que defienda el Buen Vivir frente a las necesidades de modernización.";
+
+    // MENSAJES INICIALES DEL BOT
+    const initPar = "ENTRADA DE SISTEMA: NODO B2 ACTIVO.\\n\\nCandidato [NOMBRE], la historia moderna del Ecuador demuestra que la única solución a la crisis es la apertura total de mercados, la reducción del gasto público y la privatización de sectores ineficientes. El paradigma del 'Buen Vivir' que ustedes defienden en la Constitución de 2008 es un romanticismo utópico que espanta la inversión extranjera y ahoga el desarrollo con regulaciones absurdas.\\n\\nComo futuro profesional del derecho, le exijo que justifique: ¿Cómo pretende sostener el Estado con su supuesta redistribución de la riqueza si destruyen la acumulación de capital? Tiene la palabra.";
+    
+    const initImpar = "ENTRADA DE SISTEMA: NODO B2 ACTIVO.\\n\\nCandidato [NOMBRE], el desarrollo nacional solo se logra mediante una férrea política de Sustitución de Importaciones, industrialización pesada dirigida por un Estado centralizado y fuerte proteccionismo. Ese concepto del 'Buen Vivir' y la supuesta plurinacionalidad y ecologismo solo generan subdesarrollo, fragmentación y atraso tecnológico.\\n\\nComo futuro jurista, le reto a defender su postura: ¿Cómo justifica que prioricemos el equilibrio comunitario y la redistribución horizontal cuando lo que necesitamos es producción masiva para no depender de potencias extranjeras? Defiéndase.";
+
+    const safetyOverrides = [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+    ];
+
+    // LÓGICA DE VALIDACIÓN DOCENTE (HASH)
+    function generateHostCode(id, dictamenTexto) {
+        let payload = id + "|COMPLETADO";
+        let key = "CONTEXTO2026";
+        let hex = "";
+        for(let i = 0; i < payload.length; i++) {
+            let xor = payload.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+            hex += ("00" + xor.toString(16)).slice(-2);
+        }
+        return hex.toUpperCase();
+    }
+
+    document.getElementById('link-docente').addEventListener('click', (e) => {
+        e.preventDefault();
+        let pwd = prompt("ACCESO DOCENTE\\nIngrese Contraseña Maestra de Auditoría:");
+        if (pwd === "CONTEXTO2026") {
+            let code = prompt("Pegue el Código HOST (Hash) exacto generado en el Acta PDF:");
+            if (code) {
+                try {
+                    let key = "CONTEXTO2026";
+                    let payload = "";
+                    for(let i = 0; i < code.length; i += 2) {
+                        let hexChar = code.substr(i, 2);
+                        let xor = parseInt(hexChar, 16) ^ key.charCodeAt((i/2) % key.length);
+                        payload += String.fromCharCode(xor);
+                    }
+                    let parts = payload.split("|");
+                    if (parts.length === 2 && !isNaN(parseInt(parts[0]))) {
+                        alert("✅ CÓDIGO VÁLIDO Y AUTÉNTICO\\n\\nID Estudiante: " + parts[0] + "\\nEstado: " + parts[1]);
+                    } else {
+                        alert("❌ CÓDIGO INVÁLIDO O ADULTERADO");
+                    }
+                } catch(err) {
+                    alert("❌ CÓDIGO INVÁLIDO O ADULTERADO");
+                }
+            }
+        } else if (pwd !== null) {
+            alert("Contraseña incorrecta.");
+        }
+    });
+
+    // SISTEMA DE BOTONES (COMODINES)
+    const wc1 = document.getElementById('wc-1');
+    const wc2 = document.getElementById('wc-2');
+    const userInputBox = document.getElementById('user-input');
+
+    // =====================================================================
+    // MEDIDAS DE SEGURIDAD ANTIFRAUDE (NO COPIAR / NO PEGAR)
+    // =====================================================================
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('copy', e => { e.preventDefault(); alert("Acción de copiado bloqueada por seguridad."); });
+    document.addEventListener('cut', e => { e.preventDefault(); alert("Acción de corte bloqueada por seguridad."); });
+    
+    userInputBox.addEventListener('paste', e => {
+        e.preventDefault();
+        alert("Pegar texto está bloqueado. Por favor, redacte su respuesta manualmente.");
+    });
+    userInputBox.addEventListener('drop', e => {
+        e.preventDefault();
+    });
+
+    wc1.addEventListener('click', () => {
+        const textToInject = "[APORTE EPISTÉMICO: El paradigma del Sumak Kawsay exige un modelo donde la economía se subordina a los derechos colectivos y la naturaleza, superando la visión extractivista y puramente acumulativa.] ";
+        userInputBox.value += textToInject;
+        wc1.disabled = true;
+        wc1.innerText = "✓ Comodín Usado";
+        updateCharCounter();
+        userInputBox.focus();
+    });
+
+    wc2.addEventListener('click', () => {
+        const textToInject = "[MARCO CONSTITUCIONAL ART. 83: El diseño de políticas públicas debe obligatoriamente promover el bien común, la justa distribución de la riqueza y garantizar la convivencia armónica.] ";
+        userInputBox.value += textToInject;
+        wc2.disabled = true;
+        wc2.innerText = "✓ Comodín Usado";
+        updateCharCounter();
+        userInputBox.focus();
+    });
+
+    // ARRANQUE DE LA APLICACIÓN
+    document.getElementById('btn-start').addEventListener('click', async () => {
+        const errorMsg = document.getElementById('error-msg');
+        const btn = document.getElementById('btn-start');
+        btn.innerText = "Procesando...";
+        try {
+            const idInput = document.getElementById('student-id').value.trim();
+            const nameInput = document.getElementById('student-name').value.trim();
+            
+            errorMsg.style.display = 'none';
+            
+            if(!idInput || !nameInput) {
+                errorMsg.innerText = "Complete sus datos (Cédula y Nombres).";
+                errorMsg.style.display = 'block';
+                btn.innerText = "Ingresar al Debate";
+                return;
+            }
+            if(!API_KEY || API_KEY.includes("PEGA CLAVE")) {
+                errorMsg.innerText = "El docente aún no ha configurado la API Key.";
+                errorMsg.style.display = 'block';
+                btn.innerText = "Ingresar al Debate";
+                return;
+            }
+
+            let attempts = 0;
+        try {
+            attempts = parseInt(localStorage.getItem('coliseo_lock_' + idInput)) || 0;
+        } catch(e) {}
+
+        if (attempts >= 5) {
+            document.getElementById('lock-modal').style.display = 'flex';
+            btn.innerText = "Ingresar al Debate";
+            return;
+        }
+
+        btn.innerText = "Cargando Nodo B2...";
+        btn.disabled = true;
+        
+        await new Promise(r => setTimeout(r, 600));
+        try {
+            localStorage.setItem('coliseo_lock_' + idInput, attempts + 1);
+        } catch(e) {}
+        
+        studentData.id = idInput;
+        studentData.name = nameInput;
+        
+        const lastDigit = parseInt(idInput.slice(-1));
+        let initMessage = "";
+        
+        if (lastDigit % 2 === 0) {
+            studentData.type = "NODO: DEFENSA NEOLIBERAL";
+            studentData.classTheme = "neoliberal";
+            window.activeSystemPrompt = promptPar;
+            initMessage = initPar.replace("[NOMBRE]", studentData.name);
+        } else {
+            studentData.type = "NODO: SUSTITUCIÓN IMPORTACIONES";
+            studentData.classTheme = "sustitucion";
+            window.activeSystemPrompt = promptImpar;
+            initMessage = initImpar.replace("[NOMBRE]", studentData.name);
+        }
+        
+        document.getElementById('node-badge').textContent = studentData.type;
+        document.getElementById('disp-id').textContent = studentData.id;
+        document.getElementById('disp-name').textContent = studentData.name;
+        document.getElementById('start-modal').style.display = 'none';
+        
+        document.getElementById('status-text').innerText = "RONDAS RESTANTES: " + MAX_ROUNDS;
+        
+        chatHistory = [
+            { role: "user", parts: [{ text: "Inicia la evaluación presentando tu postura macroeconómica basándote en mis datos." }] },
+            { role: "model", parts: [{ text: initMessage }] }
+        ];
+        
+        appendMessage('bot', initMessage, false, studentData.classTheme);
+        
+        userInputBox.disabled = false;
+        userInputBox.focus();
+    } catch (err) {
+        errorMsg.innerText = "Error crítico al iniciar: " + err.message;
+        errorMsg.style.display = 'block';
+        document.getElementById('btn-start').innerText = "Ingresar al Debate";
+        document.getElementById('btn-start').disabled = false;
+    }
+});
+
+    // FALLBACK DE MODELO
+    async function fetchWithFallback(payload) {
+        if (!activeModelCache) {
+            document.getElementById('status-text').innerText = "CALIBRANDO MOTOR NEURAL...";
+            try {
+                const listResponse = await fetch('https://generativelanguage.googleapis.com/v1beta/models?key=' + API_KEY);
+                if (!listResponse.ok) throw new Error("HTTP " + listResponse.status);
+                
+                const data = await listResponse.json();
+                const validModels = data.models.filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"));
+                
+                if (validModels.length === 0) throw new Error("API Key inválida o sin modelos.");
+                
+                const prefs = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0", "gemini-pro"];
+                for (let pref of prefs) {
+                    const found = validModels.find(m => m.name.includes(pref));
+                    if (found) { activeModelCache = found.name; break; }
+                }
+                if (!activeModelCache) activeModelCache = validModels[0].name; 
+            } catch (e) {
+                console.warn("Fallo autodetección, usando default: " + e.message);
+                activeModelCache = "models/gemini-2.5-flash";
+            }
+        }
+        
+        const modelPath = activeModelCache.startsWith("models/") ? activeModelCache : \`models/\${activeModelCache}\`;
+        const url = 'https://generativelanguage.googleapis.com/v1beta/' + modelPath + ':generateContent?key=' + API_KEY;
+        
+        let rondasText = MAX_ROUNDS - round;
+        if (rondasText < 0) rondasText = "EVALUACIÓN FINALIZADA";
+        document.getElementById('status-text').innerText = \`EN LÍNEA | RONDAS RESTANTES: \${rondasText}\`;
+
+        let retries = 3;
+        while (retries > 0) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 60000); 
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                if (!response.ok) {
+                    let errMsg = "Error HTTP " + response.status;
+                    if (response.status === 429) {
+                        await new Promise(r => setTimeout(r, 5000));
+                        retries--;
+                        continue;
+                    }
+                    throw new Error(errMsg);
+                }
+                return await response.json();
+            } catch (err) {
+                if (err.name === 'AbortError') {
+                    retries--;
+                    if(retries <= 0) throw new Error("La IA tardó demasiado en responder (Timeout).");
+                    continue;
+                }
+                throw err; 
+            }
+        }
+    }
+
+    // LLAMADA A GEMINI
+    async function callGemini(userText) {
+        const chatBox = document.getElementById('chat-box');
+        const btnSend = document.getElementById('btn-send');
+        const indicator = document.getElementById('typing-indicator');
+        
+        userInputBox.disabled = true;
+        btnSend.disabled = true;
+        indicator.style.display = 'block';
+        chatBox.appendChild(indicator);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        appendMessage('user', userText);
+        
+        let textForModel = userText;
+        if (round >= MAX_ROUNDS && !abortTriggered) {
+            textForModel += "\\n\\n[INSTRUCCIÓN DEL SISTEMA: Esta es la ronda final. Analiza rigurosamente si el estudiante logró desmantelar tu postura económica utilizando los conceptos del 'Buen Vivir', políticas públicas, inversión y redistribución que se estudian en la materia.\\nCierra el debate. Emite tu dictamen final en este formato estricto:\\n\\n### DICTAMEN DE AUDITORÍA\\n**1. Sustento del Buen Vivir (Max 3.0 pts):** [Evalúa si usó principios del Buen Vivir de forma técnica, sin caer en discursos vacíos. Asigna puntaje].\\n**2. Rigor en Políticas Públicas (Max 3.0 pts):** [Evalúa el manejo de conceptos de redistribución, inversión y empleo. Asigna puntaje].\\n**3. Resistencia Adversarial (Max 4.0 pts):** [Evalúa la coherencia argumentativa a lo largo de las 3 rondas. Asigna puntaje].\\n**Calificación Total Sugerida:** [Suma de puntos]/10.0\\n\\n[Breve mensaje de despedida]]";
+        }
+        
+        chatHistory.push({ role: "user", parts: [{ text: textForModel }] });
+        
+        try {
+            const data = await fetchWithFallback({
+                systemInstruction: { parts: [{ text: window.activeSystemPrompt }] },
+                contents: chatHistory,
+                generationConfig: { temperature: 0.3 },
+                safetySettings: safetyOverrides
+            });
+            
+            const botReply = data.candidates[0].content.parts[0].text;
+            chatHistory.push({ role: "model", parts: [{ text: botReply }] });
+            indicator.style.display = 'none';
+            
+            appendMessage('bot', marked.parse(botReply), true, studentData.classTheme);
+            
+            if (round >= MAX_ROUNDS) {
+                finalizarSimulacion(botReply);
+            } else {
+                userInputBox.disabled = false;
+                userInputBox.value = ''; 
+                updateCharCounter();
+                userInputBox.focus();
+            }
+        } catch (error) {
+            indicator.style.display = 'none';
+            alert("ERROR NEURAL: " + error.message);
+            chatHistory.pop(); // quitar el user message fallido
+            userInputBox.disabled = false;
+            btnSend.disabled = false;
+        }
+    }
+
+    function finalizarSimulacion(botReply) {
+        document.getElementById('input-area').style.display = 'none';
+        
+        let dictamenTexto = botReply;
+        const dictamenIndex = botReply.indexOf("### DICTAMEN DE AUDITORÍA");
+        if (dictamenIndex !== -1) {
+            dictamenTexto = botReply.substring(dictamenIndex);
+        }
+        
+        let hostCode = generateHostCode(studentData.id, dictamenTexto);
+        const leyenda = "**DEBATE FINALIZADO.** Descargue el Acta y súbala a Moodle.";
+        appendMessage('bot', marked.parse(leyenda), true, studentData.classTheme);
+        transcriptLog.pop(); // Evita que la leyenda vaya al PDF
+        
+        // Adjuntamos el HOST CODE en el PDF
+        let dictamenHtmlFinal = marked.parse(dictamenTexto) + "<br><br><div style='background-color:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:8px; font-family:monospace; font-size:13px; font-weight:bold; color:#0f172a; text-align:center;'>🔑 CÓDIGO HOST DE SEGURIDAD: " + hostCode + "</div>";
+        prepararActaPDF(dictamenHtmlFinal);
+        
+        document.getElementById('status-text').style.display = 'none';
+        document.getElementById('pdf-area').style.display = 'flex';
+        
+        const chatBox = document.getElementById('chat-box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function prepararActaPDF(htmlDictamen) {
+        document.getElementById('pdf-name').innerText = studentData.name;
+        document.getElementById('pdf-id').innerText = studentData.id;
+        document.getElementById('pdf-nodo').innerText = studentData.type;
+        document.getElementById('pdf-date').innerText = new Date().toLocaleString();
+        
+        const transcriptContainer = document.getElementById('pdf-transcript');
+        transcriptContainer.innerHTML = '';
+        
+        transcriptLog.forEach(log => {
+            if(log.text.includes("Inicia la evaluación presentando tu postura")) return;
+            const roleClass = log.role === 'bot' ? 't-bot' : 't-user';
+            const roleName = log.role === 'bot' ? "🤖 MÁQUINA [" + studentData.type + "]" : "🎓 ESTUDIANTE [" + studentData.name + "]";
+            
+            transcriptContainer.innerHTML += "<div class='" + roleClass + "'>" + roleName + "</div><div class='t-content'>" + log.text + "</div>";
+        });
+        
+        document.getElementById('pdf-dictamen').innerHTML = htmlDictamen;
+    }
+
+    const charCounter = document.getElementById('char-counter');
+    const btnSend = document.getElementById('btn-send');
+    
+    function updateCharCounter() {
+        const textLen = userInputBox.value.trim().length;
+        charCounter.innerText = "Caracteres: " + textLen + " / Rango: 200 - 1500";
+        if (textLen >= 200 && textLen <= 1500) {
+            charCounter.classList.remove('error');
+            btnSend.disabled = false;
+        } else {
+            charCounter.classList.add('error');
+            btnSend.disabled = true;
+        }
+        if(userInputBox.disabled) btnSend.disabled = true;
+    }
+
+    userInputBox.addEventListener('input', () => {
+        updateCharCounter();
+    });
+
+    btnSend.addEventListener('click', () => {
+        if(abortTriggered) return;
+        const text = userInputBox.value.trim();
+        if(text.length < 200 || text.length > 1500) {
+            alert("Vulneración de Formato. El argumento debe poseer entre 200 y 1500 caracteres."); return;
+        }
+        round++;
+        callGemini(text);
+    });
+
+    function appendMessage(sender, text, isHTML = false, extraClass = '') {
+        const chatBox = document.getElementById('chat-box');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = "message " + sender + (extraClass ? " " + extraClass : "");
+        
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'avatar';
+        avatarDiv.innerText = sender === 'bot' ? 'IA Macroeconómica' : studentData.name;
+        
+        const textDiv = document.createElement('div');
+        if (isHTML) textDiv.innerHTML = text;
+        else textDiv.innerText = text;
+        
+        msgDiv.appendChild(avatarDiv);
+        msgDiv.appendChild(textDiv);
+        
+        chatBox.insertBefore(msgDiv, document.getElementById('typing-indicator'));
+        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        transcriptLog.push({
+            role: sender,
+            text: isHTML ? text.replace(/<[^>]*>?/gm, '') : text
+        });
+    }
+
+    document.getElementById('btn-download').addEventListener('click', () => {
+        const acta = document.getElementById('acta-auditable-moodle');
+        const appCapture = document.querySelector('.app-container');
+        const btn = document.getElementById('btn-download');
+        
+        btn.innerHTML = "Generando PDF Oficial...";
+        btn.disabled = true;
+        
+        appCapture.style.display = 'none';
+        acta.style.display = 'block';
+        
+        setTimeout(() => {
+            html2pdf().set({
+                margin: 15,
+                filename: "Acta_ColiseoMacro_" + studentData.id + ".pdf",
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['css', 'legacy'] }
+            }).from(acta).save().then(() => {
+                acta.style.display = 'none';
+                appCapture.style.display = 'flex';
+                btn.disabled = false;
+                btn.innerHTML = "Descargar Acta Oficial PDF";
+            });
+        }, 800);
+    });
+//]]>
+` + "</sc" + "ript>";
+
+    // =====================================================================
+    // 3. INYECCIÓN EN EL IFRAME (BYPASS)
+    // =====================================================================
+    setTimeout(function() {
+        const iframe = document.getElementById('coliseo-sandbox');
+        if (iframe) {
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(htmlPayload);
+            doc.close();
+        }
+    }, 500);
+})();
+//]]>
+</script>
